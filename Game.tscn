@@ -1,13 +1,14 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Player/Player.gd" type="Script" id=1]
 [ext_resource path="res://Key/key.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Exit/Exit.gd" type="Script" id=3]
-[ext_resource path="res://UI/Menu.gd" type="Script" id=4]
+[ext_resource path="res://UI/InputRemapMenu.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Enemy/Enemy.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Assets/315844__gneube__zombie-snarl.wav" type="AudioStream" id=6]
 [ext_resource path="res://Assets/341695__projectsu012__coins-1.wav" type="AudioStream" id=7]
 [ext_resource path="res://Assets/The Biggest Discovery.ogg" type="AudioStream" id=8]
+[ext_resource path="res://Assets/shotgun.obj" type="ArrayMesh" id=9]
 
 [sub_resource type="PlaneMesh" id=1]
 size = Vector2( 100, 50 )
@@ -156,9 +157,17 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
 [node name="Camera" type="Camera" parent="Player/Pivot"]
 current = true
 
+[node name="Gun" type="MeshInstance" parent="Player/Pivot"]
+transform = Transform( -8, 0, 6.99382e-07, 0, 8, 0, -6.99382e-07, 0, -8, 0.2, -0.15, -0.3 )
+mesh = ExtResource( 9 )
+skeleton = NodePath("../..")
+
+[node name="RayCast" type="RayCast" parent="Player/Pivot"]
+enabled = true
+cast_to = Vector3( 0, 0, -30 )
+
 [node name="Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
-autoplay = true
 
 [node name="Key" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 7 )
@@ -168,24 +177,8 @@ stream = ExtResource( 6 )
 
 [node name="UI" type="CanvasLayer" parent="."]
 
-[node name="Menu" type="Control" parent="UI"]
-visible = false
-margin_right = 40.0
-margin_bottom = 40.0
-script = ExtResource( 4 )
-
-[node name="Background" type="ColorRect" parent="UI/Menu"]
-margin_right = 1024.0
-margin_bottom = 600.0
-color = Color( 0, 0, 0, 0.752941 )
-
-[node name="Quit" type="Button" parent="UI/Menu"]
+[node name="Menu" parent="UI" instance=ExtResource( 4 )]
 pause_mode = 2
-margin_left = 462.0
-margin_top = 500.0
-margin_right = 562.0
-margin_bottom = 540.0
-text = "Quit Game"
+visible = false
 
 [connection signal="body_entered" from="Maze/Exit" to="Maze/Exit" method="_on_Exit_body_entered"]
-[connection signal="pressed" from="UI/Menu/Quit" to="UI/Menu" method="_on_Quit_pressed"]
